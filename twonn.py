@@ -28,16 +28,20 @@ def estimate_id(X, plot=False, X_is_dist=False):
     if X_is_dist:
         dist = X
     else:
+        nn_count = 3
+        nbrs = NearestNeighbors(n_neighbors=nn_count, algorithm='ball_tree').fit(X)
+        distances, indices = nbrs.kneighbors(X)
+        mu = distances[:,2] / distances[:,1]
         # COMPUTE PAIRWISE DISTANCES FOR EACH POINT IN THE DATASET
-        dist = scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(X, metric='euclidean'))
+        #dist = scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(X, metric='euclidean'))
 
     # FOR EACH POINT, COMPUTE mu_i = r_2 / r_1,
     # where r_1 and r_2 are first and second shortest distances
-    mu = np.zeros(N)
+    #mu = np.zeros(N)
 
-    for i in range(N):
-        sort_idx = np.argsort(dist[i,:])
-        mu[i] = dist[i,sort_idx[2]] / dist[i,sort_idx[1]]
+    #for i in range(N):
+    #    sort_idx = np.argsort(dist[i,:])
+    #    mu[i] = dist[i,sort_idx[2]] / dist[i,sort_idx[1]]
 
     # COMPUTE EMPIRICAL CUMULATE
     sort_idx = np.argsort(mu)
